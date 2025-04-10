@@ -25,5 +25,5 @@ jobs:
             git pull origin main
             docker stop rutasVivasService
             docker rm rutasVivasService
-            docker build -f Dockerfile -t rutasVivasService-image . || { echo "Docker build failed"; exit 1; }
-            docker run --privileged -d -it -p 5030:8090  -v dind-data:/var/lib/docker --restart unless-stopped --name rutasVivasService rutasVivasService-image  || { echo "Docker run failed"; exit 1; }
+            docker build -f Dockerfile -t rutasvivasservice . || { echo "Docker build failed"; exit 1; }
+            docker run --privileged -d -it -p 5030:8090  -v dind-data:/var/lib/docker --restart unless-stopped --name rutasvivasservice rutasvivasservice || { echo "Docker run failed"; exit 1; }
