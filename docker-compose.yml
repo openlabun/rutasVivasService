@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  rutasvivasservice:
+    container_name: rutasvivasservice
+    image: alpine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PB_VERSION: 0.26.6
+    ports:
+      - "5030:8080"
+    volumes:
+      - pb_data:/pb/pb_data
+    restart: unless-stopped
+    entrypoint: ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+
+volumes:
+  pb_data:
