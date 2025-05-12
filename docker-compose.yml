@@ -3,18 +3,16 @@ version: '3.8'
 services:
   rutasvivasservice:
     container_name: rutasvivasservice
-    image: alpine:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        PB_VERSION: 0.26.6
+    image: pocketbase/pocketbase:0.26.6
     ports:
       - "5030:8080"
     volumes:
-      - pb_data:/pb/pb_data
+      - pb_data:/pb_data
+    environment:
+      PB_ADMIN_EMAIL: "admin@uninorte.edu.co"
+      PB_ADMIN_PASSWORD: "TuPasswordSeguro123"
     restart: unless-stopped
-    entrypoint: ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+    command: serve --http=0.0.0.0:8080 
 
 volumes:
   pb_data:
