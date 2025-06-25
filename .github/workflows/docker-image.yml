@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            if [ ! -d /home/proyecto/rutasVivasService/ ]; then
+              echo "Directory /home/proyecto/rutasVivasService/ not found. Aborting deployment."
+              exit 1
+            fi
+            cd /home/proyecto/rutasVivasService/
+            git pull origin master
+            docker stop rutasvivasservice
+            docker rm rutasvivasservice
+            echo "🧹 Apagando servicios anteriores..."
+            docker compose down
+
+            echo "🚀 Construyendo y levantando servicios..."
+            docker compose up --build -d

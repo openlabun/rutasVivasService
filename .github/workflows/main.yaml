@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            if [ ! -d /home/proyecto/rutasVivasService/ ]; then
+              echo "Directory /home/proyecto/rutasVivasService/ not found. Aborting deployment."
+              exit 1
+            fi
+            cd /home/proyecto/rutasVivasService/
+            git pull origin main
+            docker stop rutasVivasService
+            docker rm rutasVivasService
+            docker build -f Dockerfile -t rutasVivasService-image . || { echo "Docker build failed"; exit 1; }
+            docker run --privileged -d -it -p 5030:8080  -v dind-data:/var/lib/docker --restart unless-stopped --name rutasVivasService rutasVivasService-image  || { echo "Docker run failed"; exit 1; }
