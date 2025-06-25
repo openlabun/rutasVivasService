@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: guia_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - DEBUG=True
+
+  db:
+    image: postgis/postgis
+    container_name: guia_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: guia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  osrm:
+    image: osrm/osrm-backend
+    container_name: osrm_server
+    command: osrm-routed /data/campus.osrm
+    ports:
+      - "8080:5000"
+    volumes:
+      - ./osrm-data:/data
