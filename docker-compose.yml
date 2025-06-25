@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   backend:
     build: .
@@ -15,6 +13,7 @@ services:
 
   db:
     image: postgis/postgis
+    platform: linux/amd64
     container_name: guia_db
     restart: always
     ports:
@@ -26,6 +25,7 @@ services:
 
   osrm:
     image: osrm/osrm-backend
+    platform: linux/amd64
     container_name: osrm_server
     command: osrm-routed /data/campus.osrm
     ports:
