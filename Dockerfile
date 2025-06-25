@@ -8,14 +8,19 @@ ENV PYTHONUNBUFFERED=1
 # Crea y define el directorio de trabajo
 WORKDIR /app
 
-# Instala dependencias del sistema necesarias para psycopg2 y otros paquetes
+# Instala dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     binutils \
     gdal-bin \
+    libgdal-dev \
     python3-gdal \
     && rm -rf /var/lib/apt/lists/*
+
+# Establece las rutas de inclusión para GDAL (necesario para compilar bindings)
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
 
 # Copia el archivo de dependencias
 COPY requirements.txt .

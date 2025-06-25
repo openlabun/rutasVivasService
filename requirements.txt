@@ -6,4 +6,4 @@ django-cors-headers
 django-environ
 gunicorn
 geopandas
-gdal
+gdal==3.6.2
