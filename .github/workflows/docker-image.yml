@@ -5,10 +5,13 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Deploy using SSH
         uses: appleboy/ssh-action@master
         with:
@@ -17,16 +20,17 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            if [ ! -d /home/proyecto/rutasVivasService/ ]; then
-              echo "Directory /home/proyecto/rutasVivasService/ not found. Aborting deployment."
-              exit 1
-            fi
+            echo "📦 Entrando al proyecto..."
             cd /home/proyecto/rutasVivasService/
-            git pull origin master
-            docker stop rutasvivasservice
-            docker rm rutasvivasservice
+
+            echo "🔄 Actualizando código..."
+            git pull origin main
+
             echo "🧹 Apagando servicios anteriores..."
             docker compose down
 
-            echo "🚀 Construyendo y levantando servicios..."
-            docker compose up --build -d
+            echo "⬇️ Descargando imágenes publicadas..."
+            docker compose pull
+
+            echo "🚀 Levantando servicios..."
+            docker compose up -d

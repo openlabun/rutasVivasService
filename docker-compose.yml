@@ -1,11 +1,11 @@
+version: "3.8"
+
 services:
   backend:
-    build: .
+    image: cubilloscristian/rutas-vivas:latest
     container_name: guia_backend
     ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
+      - "5030:8000"
     depends_on:
       - db
     environment:
