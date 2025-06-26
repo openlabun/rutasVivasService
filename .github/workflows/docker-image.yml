@@ -24,7 +24,7 @@ jobs:
             cd /home/proyecto/rutasVivasService/
 
             echo "🔄 Actualizando código..."
-            git pull origin main
+            git pull origin master
 
             echo "🧹 Apagando servicios anteriores..."
             docker compose down
