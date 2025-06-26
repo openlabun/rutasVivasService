@@ -25,6 +25,10 @@ SECRET_KEY = "django-insecure-hjyo5%preoa*@qf4%0)@23#je02t0$m-lld1f)ld=w1#d+1lk#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://rutasvivasservice.openlab.uninorte.edu.co",
+]
+
 ALLOWED_HOSTS = ["*"]
 
 
