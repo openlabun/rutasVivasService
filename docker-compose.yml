@@ -1,6 +1,7 @@
 services:
   backend:
-    image: .
+    build: .
+    image: rutas-vivas:local
     container_name: guia_backend
     ports:
       - "5030:8000"
@@ -35,6 +36,7 @@ services:
       - "8080:5000"
     volumes:
       - ./osrm-data:/data
+    restart: unless-stopped
 
 volumes:
   pgdata:
