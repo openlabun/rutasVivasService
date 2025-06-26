@@ -1,6 +1,6 @@
 services:
   backend:
-    image: cubilloscristian/rutas-vivas:latest
+    image: .
     container_name: guia_backend
     ports:
       - "5030:8000"
