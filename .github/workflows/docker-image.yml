@@ -29,8 +29,8 @@ jobs:
             echo "🧹 Apagando servicios anteriores..."
             docker compose down
 
-            echo "⬇️ Descargando imágenes publicadas..."
-            docker compose pull
+            echo "🚧 Construyendo imagen localmente..."
+            docker compose build
 
             echo "🚀 Levantando servicios..."
             docker compose up -d
