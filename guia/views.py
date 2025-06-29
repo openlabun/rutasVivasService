@@ -71,7 +71,7 @@ class EmotionalRouteView(APIView):
         coords = [f"{lon},{lat}"] + [f"{p.geom.x},{p.geom.y}" for p in close_points]
 
         # Llamar a OSRM
-        osrm_url = f"http://localhost:5000/route/v1/foot/" + ";".join(coords)
+        osrm_url = f"http://osrm_server:5000/route/v1/foot/" + ";".join(coords)
         res = requests.get(
             osrm_url, params={"overview": "full", "geometries": "geojson"}
         )
