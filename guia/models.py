@@ -45,3 +45,28 @@ class Station(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserLocal(models.Model):
+    id = models.CharField(
+        primary_key=True, max_length=100
+    )  # UUID o timestamp desde Flutter
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class LandmarkComment(models.Model):
+    author_id = models.CharField(max_length=100)
+    author_name = models.CharField(max_length=100)
+    landmark = models.ForeignKey(
+        Landmark, on_delete=models.CASCADE, related_name="comments"
+    )
+    description = models.TextField()
+    emotions = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.author_name} sobre {self.landmark.code}"

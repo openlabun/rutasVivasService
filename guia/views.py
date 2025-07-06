@@ -8,11 +8,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from guia.models import Landmark, Mood, Station
+from guia.models import Landmark, LandmarkComment, Mood, Station, UserLocal
 from guia.serializers import (
     LandmarkSerializer,
     LandmarkImageSerializer,
     StationSerializer,
+    UserLocalSerializer,
+    LandmarkCommentSerializer,
 )
 
 
@@ -129,3 +131,13 @@ class StationListView(generics.ListAPIView):
 class StationCreateView(generics.CreateAPIView):
     queryset = Station.objects.all()
     serializer_class = StationSerializer
+
+
+class UserLocalCreateView(generics.CreateAPIView):
+    queryset = UserLocal.objects.all()
+    serializer_class = UserLocalSerializer
+
+
+class LandmarkCommentCreateView(generics.CreateAPIView):
+    queryset = LandmarkComment.objects.all()
+    serializer_class = LandmarkCommentSerializer

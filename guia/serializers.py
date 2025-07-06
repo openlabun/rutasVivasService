@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from guia.models import Landmark, Mood, LandmarkImage, Station
+from guia.models import (
+    Landmark,
+    LandmarkComment,
+    Mood,
+    LandmarkImage,
+    Station,
+    UserLocal,
+)
 from django.contrib.gis.geos import Point, Polygon
 
 
@@ -79,3 +86,22 @@ class StationSerializer(serializers.ModelSerializer):
         station = Station.objects.create(area=polygon, **validated_data)
         station.landmarks.set(landmarks_data)
         return station
+
+
+class UserLocalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLocal
+        fields = ["id", "name", "created_at"]
+
+
+class LandmarkCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LandmarkComment
+        fields = [
+            "author_id",
+            "author_name",
+            "landmark",
+            "description",
+            "emotions",
+            "created_at",
+        ]
