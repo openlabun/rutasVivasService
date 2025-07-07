@@ -113,6 +113,16 @@ def landmarks_geojson(request):
             "properties": {
                 "id": landmark.id,
                 "name": landmark.name,
+                "description": landmark.description,
+                "main_image": landmark.main_image.url if landmark.main_image else None,
+                "secondary_images": [
+                    {
+                        "id": img.id,
+                        "image": img.image.url,
+                        "description": img.description,
+                    }
+                    for img in landmark.secondary_images.all()
+                ],
                 "code": landmark.code,
                 "emotions": landmark.emotions,  # texto plano separado por comas
                 "moods": [m.name for m in landmark.moods.all()],  # lista de moods
