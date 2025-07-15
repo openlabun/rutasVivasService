@@ -5,8 +5,7 @@ while ! nc -z db 5432; do
   sleep 1
 done
 
-echo "✅ Generando y ejecutando migraciones..."
-python manage.py makemigrations --noinput
+echo "✅ Ejecutando migraciones..."
 python manage.py migrate --noinput
 
 
