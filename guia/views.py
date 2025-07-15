@@ -56,39 +56,57 @@ class EmotionalRouteView(APIView):
         if not mood or not lat or not lon:
             return Response({"error": "Datos incompletos"}, status=400)
 
-        # Crear punto de inicio
         start = Point(float(lon), float(lat))
-
-        # Obtener mood
         mood_obj = Mood.objects.filter(name__iexact=mood).first()
+
         if not mood_obj:
             return Response({"error": "Mood no válido"}, status=404)
 
-        # Buscar landmarks que tengan ese mood
-        landmarks = Landmark.objects.filter(moods=mood_obj)
+        # Filtra y ordena todos los hitos compatibles por cercanía al punto de inicio
+        all_landmarks = list(Landmark.objects.filter(moods=mood_obj).order_by("geom"))
 
-        # Ordenar por cercanía al punto de inicio (más adelante puede ser por duración)
-        close_points = sorted(landmarks, key=lambda l: l.geom.distance(start))[:3]
+        if not all_landmarks:
+            return Response({"error": "No hay hitos para este mood"}, status=404)
 
-        coords = [f"{lon},{lat}"] + [f"{p.geom.x},{p.geom.y}" for p in close_points]
+        coords = [f"{lon},{lat}"]  # Coordenadas iniciales
+        visited = []
+        total_duration = 0
+        total_distance = 0
 
-        # Llamar a OSRM
-        osrm_url = f"http://osrm_server:5000/route/v1/foot/" + ";".join(coords)
-        res = requests.get(
-            osrm_url, params={"overview": "full", "geometries": "geojson"}
-        )
+        for landmark in all_landmarks:
+            test_coords = coords + [f"{landmark.geom.x},{landmark.geom.y}"]
+            osrm_url = f"http://osrm_server:5000/route/v1/foot/" + ";".join(test_coords)
 
-        if res.status_code != 200:
-            return Response({"error": "No se pudo conectar con OSRM"}, status=500)
+            res = requests.get(
+                osrm_url, params={"overview": "full", "geometries": "geojson"}
+            )
+            if res.status_code != 200:
+                continue
 
-        route_data = res.json()["routes"][0]
+            data = res.json()["routes"][0]
+            duration = data["duration"]
+            distance = data["distance"]
+
+            if duration <= minutes * 60:
+                coords.append(f"{landmark.geom.x},{landmark.geom.y}")
+                visited.append(landmark)
+                total_duration = duration
+                total_distance = distance
+            else:
+                break  # Ya no caben más hitos
+
+        if not visited:
+            return Response(
+                {"error": "No se encontró una ruta dentro del tiempo indicado"},
+                status=404,
+            )
 
         return Response(
             {
-                "route": route_data["geometry"],
-                "distance_km": route_data["distance"] / 1000,
-                "duration_min": route_data["duration"] / 60,
-                "visited": [p.name for p in close_points],
+                "route": data["geometry"],
+                "distance_km": total_distance / 1000,
+                "duration_min": total_duration / 60,
+                "visited": [v.name for v in visited],
             }
         )
 
