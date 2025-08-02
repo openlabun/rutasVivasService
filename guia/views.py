@@ -78,7 +78,7 @@ class EmotionalRouteView(APIView):
             to_point = points[i + 1]
 
             osrm_url = (
-                f"http://osrm_server:5000/route/v1/foot/"
+                f"http://osrm:5000/route/v1/foot/"
                 f"{from_point.x},{from_point.y};{to_point.x},{to_point.y}"
             )
             res = requests.get(

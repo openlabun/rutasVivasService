@@ -23,6 +23,18 @@ jobs:
             echo "📦 Entrando al proyecto..."
             cd /home/proyecto/rutasVivasService/
 
+            echo "📝 Creando archivo .env desde secrets..."
+            cat > .env <<EOL
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            DEBUG=${{ secrets.DEBUG }}
+            DJANGO_SUPERUSER_USERNAME=${{ secrets.DJANGO_SUPERUSER_USERNAME }}
+            DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }}
+            DJANGO_SUPERUSER_PASSWORD=${{ secrets.DJANGO_SUPERUSER_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            EOL
+
             echo "🔄 Actualizando código..."
             git pull origin master
 

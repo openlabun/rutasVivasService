@@ -1,42 +1,41 @@
 services:
   backend:
     build: .
+    env_file:
+      - .env
     image: rutas-vivas:local
     container_name: guia_backend
+    restart: always
     ports:
       - "5030:8000"
     depends_on:
       - db
     environment:
-      - DEBUG=True
-      - DJANGO_SUPERUSER_USERNAME=admin
-      - DJANGO_SUPERUSER_EMAIL=admin@example.com
-      - DJANGO_SUPERUSER_PASSWORD=admin123
+      - DEBUG=${DEBUG}
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
 
   db:
     image: postgis/postgis
     platform: linux/amd64
     container_name: campus_db
     restart: always
-    ports:
-      - "5432:5432"
     environment:
-      POSTGRES_DB: campus_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - pgdata:/var/lib/postgresql/data # Volumen persistente
+      - pgdata:/var/lib/postgresql/data
 
   osrm:
     image: osrm/osrm-backend
     platform: linux/amd64
     container_name: osrm_server
+    restart: always
     command: osrm-routed /data/campus.osrm
-    ports:
-      - "8080:5000"
     volumes:
       - ./osrm-data:/data
-    restart: unless-stopped
 
 volumes:
   pgdata:

@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from decouple import config  # <--- Agrega esto al inicio
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,11 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hjyo5%preoa*@qf4%0)@23#je02t0$m-lld1f)ld=w1#d+1lk#"
-
+# Seguridad
+SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 CSRF_TRUSTED_ORIGINS = [
     "https://rutasvivasservice.openlab.uninorte.edu.co",
@@ -79,14 +81,15 @@ WSGI_APPLICATION = "rutas_vivas_backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Base de datos
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "campus_db",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
+        "NAME": config("POSTGRES_DB"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
         "HOST": "db",
-        "PORT": "",  # puerto por defecto (5432)
+        "PORT": "5432",
     }
 }
 

@@ -8,3 +8,4 @@ gunicorn
 geopandas
 gdal==3.6.2
 Pillow
+python-decouple
