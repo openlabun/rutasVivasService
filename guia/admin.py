@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Mood, Landmark, Station, LandmarkComment, UserLocal
+from .models import Mood, Landmark, Station, LandmarkComment, UserLocal, LandmarkImage
+
+
+# Inline para subir imágenes secundarias en Landmark
+class LandmarkImageInline(admin.TabularInline):
+    model = LandmarkImage
+    extra = 1
+    fields = ["image", "description"]
 
 
 @admin.register(Mood)
@@ -13,6 +20,7 @@ class LandmarkAdmin(admin.ModelAdmin):
     list_display = ["name", "code", "emotions_display", "moods_display"]
     list_filter = ["moods"]
     search_fields = ["name", "code", "description", "emotions"]
+    inlines = [LandmarkImageInline]
 
     def emotions_display(self, obj):
         return obj.emotions or "(ninguna)"
@@ -29,7 +37,7 @@ class LandmarkAdmin(admin.ModelAdmin):
 class StationAdmin(admin.ModelAdmin):
     list_display = ["name", "emotions_display", "landmarks_count"]
     search_fields = ["name", "emotions"]
-    filter_horizontal = ["landmarks"]  # Mejora el widget para seleccionar muchos hitos
+    filter_horizontal = ["landmarks"]
 
     def emotions_display(self, obj):
         return obj.emotions or "(ninguna)"
