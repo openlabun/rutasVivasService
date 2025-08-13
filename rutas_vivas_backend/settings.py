@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from operator import truediv
 import os
 from pathlib import Path
 from decouple import config
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Seguridad
 SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://rutasvivasservice.openlab.uninorte.edu.co",
